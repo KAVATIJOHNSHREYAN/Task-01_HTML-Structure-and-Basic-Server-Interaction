@@ -64,32 +64,13 @@ def validate_form(data):
     subject = data.get('subject', '').strip()
     message = data.get('message', '').strip()
 
-    # 1. Empty field checks
+    # 1. Basic empty field check
     if not name or not email or not phone or not subject or not message:
         return False, "All fields are required. Please fill out every field."
 
-    # 2. Full Name validation (at least 2 characters)
-    if len(name) < 2:
-        return False, "Full Name must be at least 2 characters long."
-
-    # 3. Email format regex validation
-    email_pattern = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
-    if not re.match(email_pattern, email):
-        return False, "Please enter a valid email address (e.g., user@example.com)."
-
-    # 4. Phone number validation (digits with optional leading +, spaces, or dashes, 7-15 digits total)
-    clean_phone = re.sub(r'[\s\-()]', '', phone)
-    phone_pattern = r'^\+?[0-9]{7,15}$'
-    if not re.match(phone_pattern, clean_phone):
-        return False, "Please enter a valid phone number (7 to 15 digits)."
-
-    # 5. Subject length validation
-    if len(subject) < 3:
-        return False, "Subject must be at least 3 characters long."
-
-    # 6. Message length validation
-    if len(message) < 10:
-        return False, "Message must be at least 10 characters long."
+    # 2. Email basic check
+    if '@' not in email or '.' not in email:
+        return False, "Please enter a valid email address."
 
     return True, ""
 
@@ -123,7 +104,7 @@ def contact():
     if not is_valid:
         flash(error_msg, 'danger')
         session['form_data'] = form_data
-        return redirect(url_for('home', _anchor='contact'))
+        return redirect(url_for('home'))
 
     # Prepare submission object with unique ID & timestamp
     submission_entry = {
