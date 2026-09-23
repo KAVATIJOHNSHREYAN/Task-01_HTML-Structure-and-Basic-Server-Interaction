@@ -77,11 +77,11 @@ def validate_form(data):
     if not re.match(email_pattern, email):
         return False, "Please enter a valid email address (e.g., user@example.com)."
 
-    # 4. Phone number validation (digits with optional leading +, spaces, or dashes, 10-15 digits total)
+    # 4. Phone number validation (digits with optional leading +, spaces, or dashes, 7-15 digits total)
     clean_phone = re.sub(r'[\s\-()]', '', phone)
-    phone_pattern = r'^\+?[0-9]{10,15}$'
+    phone_pattern = r'^\+?[0-9]{7,15}$'
     if not re.match(phone_pattern, clean_phone):
-        return False, "Please enter a valid phone number (10 to 15 digits)."
+        return False, "Please enter a valid phone number (7 to 15 digits)."
 
     # 5. Subject length validation
     if len(subject) < 3:
