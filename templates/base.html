@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Smart Contact Portal - Futuristic 2026 Glassmorphic Web Platform built with Python & Flask.">
+    <title>{% block title %}Smart Contact Portal{% endblock %}</title>
+
+    <!-- Google Fonts: Poppins (Headings) & Inter (Body) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Global Design System Stylesheet -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <!-- Floating Glass Navbar -->
+    <div class="navbar-wrapper">
+        <header class="navbar">
+            <div class="nav-container">
+                <a href="{{ url_for('home') }}" class="logo">
+                    <div class="logo-icon">
+                        <i data-lucide="layers" style="width: 22px; height: 22px;"></i>
+                    </div>
+                    <span>SmartPortal</span>
+                </a>
+                <ul class="nav-links">
+                    <li><a href="{{ url_for('home') }}">Home</a></li>
+                    <li><a href="{{ url_for('home') }}#features">Features</a></li>
+                    <li><a href="{{ url_for('home') }}#contact" class="btn-nav-primary">Get in Touch</a></li>
+                </ul>
+            </div>
+        </header>
+    </div>
+
+    <!-- Main Content Body -->
+    <main class="container">
+        <!-- Global Flash Alert Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">
+                            {% if category == 'danger' %}
+                                <i data-lucide="alert-triangle" style="width: 20px; height: 20px;"></i>
+                            {% else %}
+                                <i data-lucide="check-circle" style="width: 20px; height: 20px;"></i>
+                            {% endif %}
+                            <span>{{ message }}</span>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Minimal Premium Glass Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <i data-lucide="cpu" style="width: 20px; height: 20px; color: var(--color-cyan);"></i>
+                    <span>Smart Contact Portal</span>
+                </div>
+                <ul class="footer-links">
+                    <li><a href="{{ url_for('home') }}">Home</a></li>
+                    <li><a href="{{ url_for('home') }}#features">Features</a></li>
+                    <li><a href="{{ url_for('home') }}#contact">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-bottom">
+                &copy; {{ current_year if current_year else 2026 }} Smart Contact Portal. Designed for Cognifyz Internship by Kavati John Shreyan.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Initialize Lucide Icons -->
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>

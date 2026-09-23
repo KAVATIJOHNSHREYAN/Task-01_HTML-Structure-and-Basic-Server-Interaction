@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+
+{% block title %}Smart Contact Portal — Next-Gen Communication Platform{% endblock %}
+
+{% block content %}
+
+<!-- Hero Section -->
+<section class="hero">
+    <div class="badge-futuristic">
+        <span class="badge-dot"></span>
+        Task 1 — Cognifyz Full Stack Python Project
+    </div>
+    <h1 class="hero-title">
+        Streamlined Inquiries <br><span>Made Effortless</span>
+    </h1>
+    <p class="hero-subtitle">
+        A futuristic, server-rendered communication portal engineered with Python, Flask, Jinja2, and zero-latency JSON storage.
+    </p>
+</section>
+
+<!-- Features Grid -->
+<section id="features" class="features-grid">
+    <div class="glass-card">
+        <div class="card-icon-glow">
+            <i data-lucide="zap" style="width: 26px; height: 26px;"></i>
+        </div>
+        <h3>Server-Side Rendering</h3>
+        <p>Powered by Flask & Jinja2 templates for instant, dynamic HTML rendering directly from the backend server.</p>
+    </div>
+
+    <div class="glass-card">
+        <div class="card-icon-glow">
+            <i data-lucide="shield-check" style="width: 26px; height: 26px;"></i>
+        </div>
+        <h3>Server-Side Validation</h3>
+        <p>Strict backend validation checks phone digits, email syntax, field lengths, and sanitizes input data safely.</p>
+    </div>
+
+    <div class="glass-card">
+        <div class="card-icon-glow">
+            <i data-lucide="database" style="width: 26px; height: 26px;"></i>
+        </div>
+        <h3>Structured JSON Persistence</h3>
+        <p>Every submitted inquiry is appended to local JSON storage with a unique UUID tracker and timestamp.</p>
+    </div>
+</section>
+
+<!-- Glass Contact Form Section -->
+<section id="contact" class="contact-section">
+    <div class="glass-form-container">
+        <div class="form-header">
+            <h2>Send Us a Message</h2>
+            <p>Complete the fields below to send an instant message to our server.</p>
+        </div>
+
+        <form action="{{ url_for('contact') }}" method="POST" class="form-grid">
+            
+            <!-- Full Name -->
+            <div class="form-group">
+                <label for="name">Full Name <span>*</span></label>
+                <div class="input-wrapper">
+                    <i data-lucide="user" class="input-icon" style="width: 18px; height: 18px;"></i>
+                    <input 
+                        type="text" 
+                        id="name" 
+                        name="name" 
+                        class="form-control" 
+                        placeholder="John Doe" 
+                        value="{{ form_data.name if form_data else '' }}" 
+                        required
+                    >
+                </div>
+            </div>
+
+            <!-- Email Address -->
+            <div class="form-group">
+                <label for="email">Email Address <span>*</span></label>
+                <div class="input-wrapper">
+                    <i data-lucide="mail" class="input-icon" style="width: 18px; height: 18px;"></i>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        name="email" 
+                        class="form-control" 
+                        placeholder="john@example.com" 
+                        value="{{ form_data.email if form_data else '' }}" 
+                        required
+                    >
+                </div>
+            </div>
+
+            <!-- Phone Number -->
+            <div class="form-group">
+                <label for="phone">Phone Number <span>*</span></label>
+                <div class="input-wrapper">
+                    <i data-lucide="phone" class="input-icon" style="width: 18px; height: 18px;"></i>
+                    <input 
+                        type="tel" 
+                        id="phone" 
+                        name="phone" 
+                        class="form-control" 
+                        placeholder="+1 987 654 3210" 
+                        value="{{ form_data.phone if form_data else '' }}" 
+                        required
+                    >
+                </div>
+            </div>
+
+            <!-- Subject -->
+            <div class="form-group">
+                <label for="subject">Subject <span>*</span></label>
+                <div class="input-wrapper">
+                    <i data-lucide="bookmark" class="input-icon" style="width: 18px; height: 18px;"></i>
+                    <input 
+                        type="text" 
+                        id="subject" 
+                        name="subject" 
+                        class="form-control" 
+                        placeholder="Project Collaboration" 
+                        value="{{ form_data.subject if form_data else '' }}" 
+                        required
+                    >
+                </div>
+            </div>
+
+            <!-- Message -->
+            <div class="form-group full-width">
+                <label for="message">Your Message <span>*</span></label>
+                <textarea 
+                    id="message" 
+                    name="message" 
+                    class="form-control" 
+                    placeholder="Describe how we can collaborate..." 
+                    required
+                >{{ form_data.message if form_data else '' }}</textarea>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="form-group full-width">
+                <button type="submit" class="btn-submit-futuristic">
+                    <span>Send Message</span>
+                    <i data-lucide="arrow-right" style="width: 20px; height: 20px;"></i>
+                </button>
+            </div>
+
+        </form>
+    </div>
+</section>
+
+{% endblock %}
