@@ -107,9 +107,12 @@ def contact():
         return redirect(url_for('home'))
 
     # Prepare submission object with unique ID & timestamp
+    sub_id = f"SUB-{uuid.uuid4().hex[:8].upper()}"
+    timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
     submission_entry = {
-        'id': f"SUB-{uuid.uuid4().hex[:8].upper()}",
-        'timestamp': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+        'id': sub_id,
+        'timestamp': timestamp,
         'name': form_data['name'],
         'email': form_data['email'],
         'phone': form_data['phone'],
@@ -124,13 +127,27 @@ def contact():
     session['latest_submission'] = submission_entry
     flash('Your message has been submitted successfully!', 'success')
 
-    return redirect(url_for('success'))
+    # Pass URL parameters as serverless fallback
+    return redirect(url_for('success', sub_id=sub_id, name=form_data['name'], email=form_data['email'], phone=form_data['phone'], subject=form_data['subject'], message=form_data['message'], timestamp=timestamp))
 
 
 @app.route('/success', methods=['GET'])
 def success():
     """Renders the success confirmation page displaying submitted details."""
     submission = session.get('latest_submission', None)
+
+    # Fallback for serverless cookie/session drops on Vercel
+    if not submission and request.args.get('sub_id'):
+        submission = {
+            'id': request.args.get('sub_id'),
+            'timestamp': request.args.get('timestamp', datetime.now().strftime('%Y-%m-%d %H:%M:%S')),
+            'name': request.args.get('name', ''),
+            'email': request.args.get('email', ''),
+            'phone': request.args.get('phone', ''),
+            'subject': request.args.get('subject', ''),
+            'message': request.args.get('message', '')
+        }
+
     return render_template('success.html', submission=submission)
 
 
