@@ -9,19 +9,26 @@ app = Flask(__name__)
 # Secret key for session management and flash messages
 app.secret_key = 'smart_contact_portal_super_secret_key_cognifyz'
 
-# File storage configuration
-DATA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data')
+# File storage configuration (Use /tmp on Vercel read-only serverless environment)
+if os.environ.get('VERCEL'):
+    DATA_DIR = '/tmp/data'
+else:
+    DATA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data')
+
 DATA_FILE = os.path.join(DATA_DIR, 'submissions.json')
 
 
 def ensure_data_file_exists():
     """Ensure the data directory and submissions.json file exist."""
-    if not os.path.exists(DATA_DIR):
-        os.makedirs(DATA_DIR, exist_ok=True)
-    
-    if not os.path.exists(DATA_FILE):
-        with open(DATA_FILE, 'w', encoding='utf-8') as f:
-            json.dump([], f, indent=4)
+    try:
+        if not os.path.exists(DATA_DIR):
+            os.makedirs(DATA_DIR, exist_ok=True)
+        
+        if not os.path.exists(DATA_FILE):
+            with open(DATA_FILE, 'w', encoding='utf-8') as f:
+                json.dump([], f, indent=4)
+    except Exception as e:
+        print(f"Warning: File system write restricted: {e}")
 
 
 def load_submissions():
@@ -30,16 +37,20 @@ def load_submissions():
     try:
         with open(DATA_FILE, 'r', encoding='utf-8') as f:
             return json.load(f)
-    except (json.JSONDecodeError, FileNotFoundError):
+    except (json.JSONDecodeError, FileNotFoundError, PermissionError):
         return []
 
 
 def save_submission(submission_data):
-    """Append a new submission entry to the JSON file."""
+    """Append a new submission entry to the JSON file safely."""
     submissions = load_submissions()
     submissions.append(submission_data)
-    with open(DATA_FILE, 'w', encoding='utf-8') as f:
-        json.dump(submissions, f, indent=4)
+    try:
+        ensure_data_file_exists()
+        with open(DATA_FILE, 'w', encoding='utf-8') as f:
+            json.dump(submissions, f, indent=4)
+    except Exception as e:
+        print(f"File save bypassed on read-only serverless environment: {e}")
 
 
 def validate_form(data):
@@ -125,7 +136,7 @@ def contact():
         'message': form_data['message']
     }
 
-    # Persist to local JSON storage
+    # Persist to JSON storage (/tmp on Vercel)
     save_submission(submission_entry)
 
     # Store submission details in session for success display
